@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Model\Product\ProductFacade;
 use App\Model\Product\ProductForm;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,15 +15,16 @@ class ProductController extends AbstractController
     /**
      * @Route("product/form")
      * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param \App\Model\Product\ProductFacade $productFacade
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function form(Request $request): Response
+    public function form(Request $request, ProductFacade $productFacade): Response
     {
         $form = $this->createForm(ProductForm::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            dump($form->getData());
+            $productFacade->create($form->getData());
 
             return $this->redirectToRoute('homepage');
         }
