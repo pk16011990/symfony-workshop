@@ -3,17 +3,18 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class HomepageController
+class HomepageController extends AbstractController
 {
     /**
      * @Route(name="homepage", path="/")
      */
     public function homepage(): Response
     {
-        return new Response('Hello all');
+        return $this->render('Homepage/homepage.html.twig');
     }
 
     /**
@@ -21,6 +22,8 @@ class HomepageController
      */
     public function hello(string $name = 'nobody'): Response
     {
-        return new Response('Hello ' . $name);
+        return $this->render('Homepage/hello.html.twig', [
+            'name' => $name,
+        ]);
     }
 }
