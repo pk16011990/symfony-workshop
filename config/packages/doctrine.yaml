@@ -34,4 +34,7 @@ doctrine:
         query_cache_driver:
             type: service
             id: app.doctrine.cache_driver.query_cache
+        result_cache_driver:
+            type: service
+            id: app.doctrine.cache_driver.result_cache
 

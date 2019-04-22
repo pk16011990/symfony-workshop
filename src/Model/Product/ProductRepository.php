@@ -50,6 +50,21 @@ class ProductRepository
     }
 
     /**
+     * @return \App\Entity\Product[]
+     */
+    public function getAllVisiblePreloadedCached(): array
+    {
+        return $this->entityManager->createQueryBuilder()
+            ->select('p, f')
+            ->from(Product::class, 'p')
+            ->leftJoin('p.flags', 'f')
+            ->where('p.hidden = FALSE')
+            ->getQuery()
+            ->useResultCache(true, 3600)
+            ->execute();
+    }
+
+    /**
      * @return array
      */
     public function getAllVisibleNativeQuery(): array
@@ -67,6 +82,38 @@ class ProductRepository
                 WHERE p.hidden = FALSE
                 GROUP BY p.id
             ', $rsm)
+            ->execute();
+
+        // mess code, but only for fake structure like entities
+        foreach ($productsRows as $key => $productsRow) {
+            $concatenatedFlags = $productsRow['concatenatedFlags'] ?: '';
+            $productsRows[$key]['flags'] = array_map(function ($flagName) {
+                return ['name' => $flagName];
+            }, explode(',', $concatenatedFlags));
+        }
+
+        return $productsRows;
+    }
+
+    /**
+     * @return array
+     */
+    public function getAllVisibleNativeQueryCached(): array
+    {
+        $rsm = new ResultSetMapping();
+        $rsm->addScalarResult('name', 'name');
+        $rsm->addScalarResult('price', 'price');
+        $rsm->addScalarResult('concatenatedFlags', 'concatenatedFlags');
+
+        $productsRows = $this->entityManager->createNativeQuery(
+            'SELECT p.name, p.price, GROUP_CONCAT(f.name) as concatenatedFlags
+                FROM product p 
+                LEFT JOIN product_flag pf ON pf.product_id = p.id
+                LEFT JOIN flag f ON f.id = pf.flag_id
+                WHERE p.hidden = FALSE
+                GROUP BY p.id
+            ', $rsm)
+            ->useResultCache(true, 3600)
             ->execute();
 
         // mess code, but only for fake structure like entities

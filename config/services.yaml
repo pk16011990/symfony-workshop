@@ -60,3 +60,8 @@ services:
         class: App\Model\Cache\PermanentPhpFileCache
         arguments:
             - '%kernel.cache_dir%/doctrine_query'
+
+    app.doctrine.cache_driver.result_cache:
+        class: Doctrine\Common\Cache\FilesystemCache
+        arguments:
+            - '%kernel.cache_dir%/doctrine_query'
