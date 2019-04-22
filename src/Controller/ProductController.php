@@ -33,4 +33,13 @@ class ProductController extends AbstractController
             'formView' => $form->createView(),
         ]);
     }
+
+    public function topOffer(ProductFacade $productFacade): Response
+    {
+        $products = $productFacade->getAllVisible();
+
+        return $this->render('Prouct/topOffer.html.twig', [
+            'products' => $products,
+        ]);
+    }
 }

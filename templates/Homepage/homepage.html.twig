@@ -1,21 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <h1>Top offer</h1>
+    <h1>Homepage</h1>
 
-    {% for product in products %}
-        <div>
-            <h3>{{ product.name }}</h3>
-            {% if product.flags is not empty %}
-                Flags:
-                {% for flag in product.flags %}
-                    {{ flag.name }}
-                    {% if not loop.last %}, {% endif %}
-                {% endfor %}
-            {% endif %}
-            <p>
-                Price: {{ product.price }}
-            </p>
-        </div>
-    {% endfor %}
+    {{ render(controller('App\\Controller\\ProductController::topOffer')) }}
 {% endblock %}
