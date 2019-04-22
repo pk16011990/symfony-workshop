@@ -65,3 +65,8 @@ services:
         class: Doctrine\Common\Cache\FilesystemCache
         arguments:
             - '%kernel.cache_dir%/doctrine_query'
+
+    app.doctrine.cache_driver.second_level_cache:
+        class: Doctrine\Common\Cache\FilesystemCache
+        arguments:
+            - '%kernel.cache_dir%/doctrine_2nd_level'

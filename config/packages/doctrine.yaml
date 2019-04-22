@@ -38,3 +38,9 @@ doctrine:
             type: service
             id: app.doctrine.cache_driver.result_cache
 
+        second_level_cache:
+            enabled: true
+            region_cache_driver:
+                type: service
+                id: app.doctrine.cache_driver.second_level_cache
+            region_lifetime: 3600

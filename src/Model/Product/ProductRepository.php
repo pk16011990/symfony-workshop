@@ -38,6 +38,16 @@ class ProductRepository
     /**
      * @return \App\Entity\Product[]
      */
+    public function getAllVisible2ndCache(): array
+    {
+        $repository = $this->entityManager->getRepository(Product::class);
+
+        return $repository->findBy(['hidden' => false]);
+    }
+
+    /**
+     * @return \App\Entity\Product[]
+     */
     public function getAllVisiblePreloaded(): array
     {
         return $this->entityManager->createQueryBuilder()
