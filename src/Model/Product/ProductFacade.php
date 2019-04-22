@@ -14,11 +14,18 @@ class ProductFacade
     private $entityManager;
 
     /**
-     * @param \Doctrine\ORM\EntityManagerInterface $entityManager
+     * @var \App\Model\Product\ProductRepository
      */
-    public function __construct(EntityManagerInterface $entityManager)
+    private $productRepository;
+
+    /**
+     * @param \Doctrine\ORM\EntityManagerInterface $entityManager
+     * @param \App\Model\Product\ProductRepository $productRepository
+     */
+    public function __construct(EntityManagerInterface $entityManager, ProductRepository $productRepository)
     {
         $this->entityManager = $entityManager;
+        $this->productRepository = $productRepository;
     }
 
     /**
@@ -45,7 +52,6 @@ class ProductFacade
      */
     public function getAllVisible(): array
     {
-        return $this->entityManager->createQuery('SELECT p FROM ' . Product::class . ' p WHERE p.hidden = FALSE')
-            ->execute();
+        return $this->productRepository->getAllVisible();
     }
 }
