@@ -6,6 +6,10 @@
         {% block stylesheets %}{% endblock %}
     </head>
     <body>
+        <ul>
+            <li><a href="{{ url('homepage') }}">Homepage</a></li>
+            <li><a href="{{ url('hello', { name: 'boss' }) }}">Hello Boss</a></li>
+        </ul>
         {% block body %}{% endblock %}
         {% block javascripts %}{% endblock %}
     </body>
