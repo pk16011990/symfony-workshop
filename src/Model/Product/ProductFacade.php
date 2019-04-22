@@ -30,7 +30,8 @@ class ProductFacade
         $product = new Product(
             $productData['name'],
             (string)$productData['price'],
-            $productData['hidden']
+            $productData['hidden'],
+            $productData['flags']
         );
 
         $this->entityManager->persist($product);

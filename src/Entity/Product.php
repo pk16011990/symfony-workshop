@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -37,15 +38,23 @@ class Product
     private $hidden;
 
     /**
+     * @ORM\ManyToMany(targetEntity="\App\Entity\Flag")
+     * @var \App\Entity\Flag[]|\Doctrine\Common\Collections\ArrayCollection
+     */
+    private $flags;
+
+    /**
      * @param string $name
      * @param string $price
      * @param bool $hidden
+     * @param array $flags
      */
-    public function __construct(string $name, string $price, bool $hidden)
+    public function __construct(string $name, string $price, bool $hidden, array $flags)
     {
         $this->name = $name;
         $this->price = $price;
         $this->hidden = $hidden;
+        $this->flags = new ArrayCollection($flags);
     }
 
     /**
@@ -78,6 +87,14 @@ class Product
     public function isHidden(): bool
     {
         return $this->hidden;
+    }
+
+    /**
+     * @return \App\Entity\Flag[]
+     */
+    public function getFlags(): array
+    {
+        return $this->flags->toArray();
     }
 
 }
