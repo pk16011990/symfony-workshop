@@ -38,4 +38,13 @@ class ProductFacade
 
         return $product;
     }
+
+    /**
+     * @return \App\Entity\Product[]
+     */
+    public function getAllVisible(): array
+    {
+        return $this->entityManager->createQuery('SELECT p FROM ' . Product::class . ' p WHERE p.hidden = FALSE')
+            ->execute();
+    }
 }

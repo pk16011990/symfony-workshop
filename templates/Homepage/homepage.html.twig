@@ -1,5 +1,14 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    Hello all
+    <h1>Top offer</h1>
+
+    {% for product in products %}
+        <div>
+            <h3>{{ product.name }}</h3>
+            <p>
+                Price: {{ product.price }}
+            </p>
+        </div>
+    {% endfor %}
 {% endblock %}
