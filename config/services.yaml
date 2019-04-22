@@ -30,3 +30,33 @@ services:
     App\Model\Product\ProductFacade:
         arguments:
             - "@?debug.stopwatch"
+
+    app.doctrine.cache_driver.query_cache:
+        class: Doctrine\Common\Cache\ChainCache
+        arguments:
+            -
+              - '@app.doctrine.cache_driver.query_cache.array'
+              - '@app.doctrine.cache.query.permanent_php_file_cache'
+
+    app.doctrine.cache_driver.query_cache.array:
+        class: Doctrine\Common\Cache\ArrayCache
+
+    app.doctrine.cache_driver.metadata_cache:
+        class: Doctrine\Common\Cache\ChainCache
+        arguments:
+            -
+              - '@app.doctrine.cache_driver.metadata_cache.array'
+              - '@app.doctrine.cache.metadata.permanent_php_file_cache'
+
+    app.doctrine.cache_driver.metadata_cache.array:
+        class: Doctrine\Common\Cache\ArrayCache
+
+    app.doctrine.cache.metadata.permanent_php_file_cache:
+        class: App\Model\Cache\PermanentPhpFileCache
+        arguments:
+            - '%kernel.cache_dir%/doctrine_metadata'
+
+    app.doctrine.cache.query.permanent_php_file_cache:
+        class: App\Model\Cache\PermanentPhpFileCache
+        arguments:
+            - '%kernel.cache_dir%/doctrine_query'
