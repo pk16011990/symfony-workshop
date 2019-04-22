@@ -5,6 +5,7 @@ namespace App\Model\Product;
 
 use App\Entity\Product;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Query\ResultSetMapping;
 
 class ProductRepository
 {
@@ -46,5 +47,36 @@ class ProductRepository
             ->where('p.hidden = FALSE')
             ->getQuery()
             ->execute();
+    }
+
+    /**
+     * @return array
+     */
+    public function getAllVisibleNativeQuery(): array
+    {
+        $rsm = new ResultSetMapping();
+        $rsm->addScalarResult('name', 'name');
+        $rsm->addScalarResult('price', 'price');
+        $rsm->addScalarResult('concatenatedFlags', 'concatenatedFlags');
+
+        $productsRows = $this->entityManager->createNativeQuery(
+            'SELECT p.name, p.price, GROUP_CONCAT(f.name) as concatenatedFlags
+                FROM product p 
+                LEFT JOIN product_flag pf ON pf.product_id = p.id
+                LEFT JOIN flag f ON f.id = pf.flag_id
+                WHERE p.hidden = FALSE
+                GROUP BY p.id
+            ', $rsm)
+            ->execute();
+
+        // mess code, but only for fake structure like entities
+        foreach ($productsRows as $key => $productsRow) {
+            $concatenatedFlags = $productsRow['concatenatedFlags'] ?: '';
+            $productsRows[$key]['flags'] = array_map(function ($flagName) {
+                return ['name' => $flagName];
+            }, explode(',', $concatenatedFlags));
+        }
+
+        return $productsRows;
     }
 }
